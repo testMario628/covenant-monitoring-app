@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container-fluid">
+    <div class="navbar-wrapper">
+      <button class="navbar-toggler d-lg-none" type="button" (click)="toggleSidebar()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">Covenant Monitoring</a>
+    </div>
+    
+    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" [ngClass]="{'show': !isCollapsed}">
+      <form class="form-inline ml-auto my-2 my-lg-0">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Cerca..." [(ngModel)]="searchQuery" name="search">
+          <div class="input-group-append">
+            <button class="btn btn-outline-success" type="button" (click)="search()">
+              <i class="material-icons">search</i>
+            </button>
+          </div>
+        </div>
+      </form>
+      
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/notifications']">
+            <i class="material-icons">notifications</i>
+            <span class="notification" *ngIf="unreadNotifications > 0">{{unreadNotifications}}</span>
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">person</i>
+            <p>Profilo</p>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Impostazioni</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

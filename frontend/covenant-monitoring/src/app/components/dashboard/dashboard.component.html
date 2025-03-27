@@ -1,0 +1,215 @@
+<div class="dashboard-container">
+  <!-- Statistiche generali -->
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card card-stats">
+        <div class="card-header">
+          <h5 class="card-title">Covenant Totali</h5>
+        </div>
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Totale</p>
+            <h3 class="card-title">{{totalCovenants}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-stats">
+        <div class="card-header bg-success">
+          <h5 class="card-title text-white">Stato Verde</h5>
+        </div>
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Conformi</p>
+            <h3 class="card-title">{{verdeCovenants}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-stats">
+        <div class="card-header bg-warning">
+          <h5 class="card-title text-white">Stato Giallo</h5>
+        </div>
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Attenzione</p>
+            <h3 class="card-title">{{gialloCovenants}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-stats">
+        <div class="card-header bg-danger">
+          <h5 class="card-title text-white">Stato Rosso</h5>
+        </div>
+        <div class="card-body">
+          <div class="numbers">
+            <p class="card-category">Critici</p>
+            <h3 class="card-title">{{rossoCovenants}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sommario per Country -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Sommario per Country</h5>
+            <button class="btn btn-sm btn-outline-primary" (click)="exportToExcel(countryStatusSummary, 'covenant_per_country')">
+              <i class="material-icons">file_download</i> Excel
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th class="text-center">Verde</th>
+                  <th class="text-center">Giallo</th>
+                  <th class="text-center">Rosso</th>
+                  <th class="text-center">Totale</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let country of countryStatusSummary">
+                  <td>{{country.country}}</td>
+                  <td class="text-center">
+                    <span class="badge bg-success text-white">{{country.verde}}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-warning text-white">{{country.giallo}}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-danger text-white">{{country.rosso}}</span>
+                  </td>
+                  <td class="text-center">{{country.verde + country.giallo + country.rosso}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sommario per Compagnia -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Sommario per Compagnia</h5>
+            <button class="btn btn-sm btn-outline-primary" (click)="exportToExcel(companyStatusSummary, 'covenant_per_compagnia')">
+              <i class="material-icons">file_download</i> Excel
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Compagnia</th>
+                  <th class="text-center">Verde</th>
+                  <th class="text-center">Giallo</th>
+                  <th class="text-center">Rosso</th>
+                  <th class="text-center">Totale</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let company of companyStatusSummary">
+                  <td>{{company.company}}</td>
+                  <td class="text-center">
+                    <span class="badge bg-success text-white">{{company.verde}}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-warning text-white">{{company.giallo}}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-danger text-white">{{company.rosso}}</span>
+                  </td>
+                  <td class="text-center">{{company.verde + company.giallo + company.rosso}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Covenant che richiedono monitoraggio immediato -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-warning text-white">
+          <h5 class="card-title">Covenant che richiedono monitoraggio immediato</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Descrizione</th>
+                  <th>Contratto</th>
+                  <th>Tipo</th>
+                  <th>Frequenza</th>
+                  <th>Ultimo Monitoraggio</th>
+                  <th>Stato</th>
+                  <th>Azioni</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dati di esempio, in produzione verrebbero dal backend -->
+                <tr>
+                  <td>COV-001</td>
+                  <td>Debt Service Coverage Ratio</td>
+                  <td>Finanziamento Progetto Eolico</td>
+                  <td>Finanziario</td>
+                  <td>Trimestrale</td>
+                  <td>15/01/2025</td>
+                  <td><span class="badge bg-warning text-white">GIALLO</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary">Monitora</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>COV-002</td>
+                  <td>Leverage Ratio</td>
+                  <td>Finanziamento Impianto Solare</td>
+                  <td>Finanziario</td>
+                  <td>Semestrale</td>
+                  <td>10/12/2024</td>
+                  <td><span class="badge bg-danger text-white">ROSSO</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary">Monitora</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>COV-003</td>
+                  <td>Interest Coverage Ratio</td>
+                  <td>Finanziamento Corporate</td>
+                  <td>Finanziario</td>
+                  <td>Trimestrale</td>
+                  <td>20/01/2025</td>
+                  <td><span class="badge bg-warning text-white">GIALLO</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary">Monitora</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

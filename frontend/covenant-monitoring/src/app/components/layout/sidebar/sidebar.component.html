@@ -1,0 +1,16 @@
+<div class="sidebar-wrapper">
+  <div class="logo">
+    <a href="#" class="simple-text">
+      <img src="assets/img/enel-logo.png" alt="Enel Logo" class="logo-img">
+      Covenant Monitoring
+    </a>
+  </div>
+  <ul class="nav">
+    <li *ngFor="let menuItem of menuItems" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a [routerLink]="[menuItem.path]">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,96 @@
+.dashboard-container {
+  padding: 15px;
+  
+  .card {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      padding: 15px;
+      border-radius: 8px 8px 0 0;
+      
+      &.bg-success {
+        background-color: #00843D !important; // Verde Enel
+      }
+      
+      &.bg-warning {
+        background-color: #FFD100 !important; // Giallo Enel
+      }
+      
+      &.bg-danger {
+        background-color: #FF3300 !important; // Rosso Enel
+      }
+      
+      .card-title {
+        margin-bottom: 0;
+        font-weight: 600;
+      }
+    }
+    
+    .card-body {
+      padding: 15px;
+      
+      .numbers {
+        text-align: center;
+        
+        .card-category {
+          font-size: 14px;
+          color: #777;
+          margin-bottom: 5px;
+        }
+        
+        .card-title {
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  
+  .table {
+    th {
+      font-weight: 600;
+      border-top: none;
+    }
+    
+    .badge {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-weight: 500;
+      
+      &.bg-success {
+        background-color: #00843D !important; // Verde Enel
+      }
+      
+      &.bg-warning {
+        background-color: #FFD100 !important; // Giallo Enel
+      }
+      
+      &.bg-danger {
+        background-color: #FF3300 !important; // Rosso Enel
+      }
+    }
+    
+    .btn-primary {
+      background-color: #00843D; // Verde Enel
+      border-color: #00843D;
+      
+      &:hover {
+        background-color: darken(#00843D, 10%);
+        border-color: darken(#00843D, 10%);
+      }
+    }
+    
+    .btn-outline-primary {
+      color: #00843D;
+      border-color: #00843D;
+      
+      &:hover {
+        background-color: #00843D;
+        color: white;
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+<div class="monitoring-form-container">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h5 class="card-title">Monitoraggio Covenant</h5>
+    </div>
+    
+    <div class="card-body">
+      <form [formGroup]="monitoringForm" (ngSubmit)="onSubmit()">
+        <!-- Selezione Covenant -->
+        <div class="form-group">
+          <label for="covenantId">Seleziona Covenant <span class="text-danger">*</span></label>
+          <select 
+            id="covenantId" 
+            formControlName="covenantId" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': submitted && monitoringForm.get('covenantId')?.errors }"
+            (change)="onCovenantChange()">
+            <option value="">-- Seleziona un covenant --</option>
+            <option *ngFor="let covenant of covenants" [value]="covenant.id">
+              {{covenant.name}} ({{covenant.type}}) - Threshold: {{covenant.threshold}}
+            </option>
+          </select>
+          <div *ngIf="submitted && monitoringForm.get('covenantId')?.errors" class="invalid-feedback">
+            <div *ngIf="monitoringForm.get('covenantId')?.errors?.['required']">Seleziona un covenant</div>
+          </div>
+        </div>
+        
+        <!-- Dettagli Covenant Selezionato -->
+        <div *ngIf="selectedCovenant" class="covenant-details mb-4">
+          <div class="alert alert-info">
+            <h6>Dettagli Covenant</h6>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Nome:</strong> {{selectedCovenant.name}}</p>
+                <p><strong>Tipo:</strong> {{selectedCovenant.type}}</p>
+                <p><strong>Threshold:</strong> {{selectedCovenant.threshold}}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Contratto:</strong> {{selectedCovenant.contractId}}</p>
+                <p><strong>Frequenza:</strong> {{selectedCovenant.frequency}}</p>
+                <p><strong>Prossimo Monitoraggio:</strong> {{selectedCovenant.nextMonitoringDate | date:'dd/MM/yyyy'}}</p>
+              </div>
+            </div>
+            
+            <!-- Regole di validazione -->
+            <div *ngIf="validationRules[selectedCovenant.type]" class="validation-rules">
+              <h6>Regole di Validazione</h6>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="rule-item">
+                    <span class="badge bg-success">Verde</span>
+                    <span *ngIf="selectedCovenant.type === 'DSCR' || selectedCovenant.type === 'ICR'">
+                      ≥ {{validationRules[selectedCovenant.type].warningThreshold}}
+                    </span>
+                    <span *ngIf="selectedCovenant.type === 'LeverageRatio'">
+                      ≤ {{validationRules[selectedCovenant.type].warningThreshold}}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="rule-item">
+                    <span class="badge bg-warning">Giallo</span>
+                    <span *ngIf="selectedCovenant.type === 'DSCR' || selectedCovenant.type === 'ICR'">
+                      {{validationRules[selectedCovenant.type].criticalThreshold}} ≤ x < {{validationRules[selectedCovenant.type].warningThreshold}}
+                    </span>
+                    <span *ngIf="selectedCovenant.type === 'LeverageRatio'">
+                      {{validationRules[selectedCovenant.type].warningThreshold}} < x ≤ {{validationRules[selectedCovenant.type].criticalThreshold}}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="rule-item">
+                    <span class="badge bg-danger">Rosso</span>
+                    <span *ngIf="selectedCovenant.type === 'DSCR' || selectedCovenant.type === 'ICR'">
+                      < {{validationRules[selectedCovenant.type].criticalThreshold}}
+                    </span>
+                    <span *ngIf="selectedCovenant.type === 'LeverageRatio'">
+                      > {{validationRules[selectedCovenant.type].criticalThreshold}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <!-- Data Monitoraggio -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="monitoringDate">Data Monitoraggio <span class="text-danger">*</span></label>
+              <input 
+                type="date" 
+                id="monitoringDate" 
+                formControlName="monitoringDate" 
+                class="form-control" 
+                [ngClass]="{ 'is-invalid': submitted && monitoringForm.get('monitoringDate')?.errors }">
+              <div *ngIf="submitted && monitoringForm.get('monitoringDate')?.errors" class="invalid-feedback">
+                <div *ngIf="monitoringForm.get('monitoringDate')?.errors?.['required']">Data monitoraggio richiesta</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Valore Attuale -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="actualValue">Valore Attuale <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input 
+                  type="number" 
+                  id="actualValue" 
+                  formControlName="actualValue" 
+                  class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted && monitoringForm.get('actualValue')?.errors }"
+                  step="0.01"
+                  (blur)="calculateStatus()">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-outline-primary" (click)="calculateStatus()">
+                    Calcola Stato
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="submitted && monitoringForm.get('actualValue')?.errors" class="invalid-feedback">
+                <div *ngIf="monitoringForm.get('actualValue')?.errors?.['required']">Valore attuale richiesto</div>
+                <div *ngIf="monitoringForm.get('actualValue')?.errors?.['min']">Valore minimo non rispettato</div>
+                <div *ngIf="monitoringForm.get('actualValue')?.errors?.['max']">Valore massimo superato</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <!-- Stato -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="status">Stato <span class="text-danger">*</span></label>
+              <select 
+                id="status" 
+                formControlName="status" 
+                class="form-control" 
+                [ngClass]="{ 'is-invalid': submitted && monitoringForm.get('status')?.errors }">
+                <option value="">-- Seleziona stato --</option>
+                <option *ngFor="let option of statusOptions" [value]="option.value">
+                  {{option.label}}
+                </option>
+              </select>
+              <div *ngIf="submitted && monitoringForm.get('status')?.errors" class="invalid-feedback">
+                <div *ngIf="monitoringForm.get('status')?.errors?.['required']">Stato richiesto</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Revisore -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="reviewedBy">Revisore <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                id="reviewedBy" 
+                formControlName="reviewedBy" 
+                class="form-control" 
+                [ngClass]="{ 'is-invalid': submitted && monitoringForm.get('reviewedBy')?.errors }">
+              <div *ngIf="submitted && monitoringForm.get('reviewedBy')?.errors" class="invalid-feedback">
+                <div *ngIf="monitoringForm.get('reviewedBy')?.errors?.['required']">Revisore richiesto</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Note -->
+        <div class="form-group">
+          <label for="notes">Note</label>
+          <textarea 
+            id="notes" 
+            formControlName="notes" 
+            class="form-control" 
+            rows="3"></textarea>
+        </div>
+        
+        <!-- Allegati -->
+        <div class="form-group">
+          <label for="attachments">Allegati</label>
+          <div class="custom-file">
+            <input 
+              type="file" 
+              id="attachments" 
+              formControlName="attachments" 
+              class="custom-file-input">
+            <label class="custom-file-label" for="attachments">Scegli file...</label>
+          </div>
+          <small class="form-text text-muted">Allega documenti a supporto del monitoraggio (PDF, Excel, ecc.)</small>
+        </div>
+        
+        <!-- Pulsanti -->
+        <div class="form-actions mt-4">
+          <button type="button" class="btn btn-secondary mr-2" (click)="resetForm()">Annulla</button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Salva Monitoraggio
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

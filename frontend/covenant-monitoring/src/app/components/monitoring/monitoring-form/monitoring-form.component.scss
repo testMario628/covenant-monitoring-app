@@ -1,0 +1,154 @@
+.monitoring-form-container {
+  .card {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      padding: 15px;
+      border-radius: 8px 8px 0 0;
+      
+      &.bg-primary {
+        background-color: #00843D !important; // Verde Enel
+      }
+      
+      .card-title {
+        margin-bottom: 0;
+        font-weight: 600;
+      }
+    }
+    
+    .card-body {
+      padding: 20px;
+      
+      .form-group {
+        margin-bottom: 20px;
+        
+        label {
+          font-weight: 500;
+          margin-bottom: 8px;
+          display: block;
+        }
+        
+        .form-control {
+          border-radius: 4px;
+          
+          &:focus {
+            border-color: #00843D;
+            box-shadow: 0 0 0 0.2rem rgba(0, 132, 61, 0.25);
+          }
+          
+          &.is-invalid {
+            border-color: #FF3300;
+            
+            &:focus {
+              box-shadow: 0 0 0 0.2rem rgba(255, 51, 0, 0.25);
+            }
+          }
+        }
+        
+        .invalid-feedback {
+          color: #FF3300;
+          font-size: 12px;
+          margin-top: 5px;
+        }
+      }
+      
+      .covenant-details {
+        .alert-info {
+          background-color: #f8f9fa;
+          border-color: #d1ecf1;
+          color: #0c5460;
+          
+          h6 {
+            color: #00843D;
+            font-weight: 600;
+            margin-bottom: 10px;
+          }
+          
+          p {
+            margin-bottom: 5px;
+          }
+          
+          .validation-rules {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #d1ecf1;
+            
+            .rule-item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 5px;
+              
+              .badge {
+                margin-right: 10px;
+                padding: 5px 10px;
+                
+                &.bg-success {
+                  background-color: #00843D !important; // Verde Enel
+                }
+                
+                &.bg-warning {
+                  background-color: #FFD100 !important; // Giallo Enel
+                }
+                
+                &.bg-danger {
+                  background-color: #FF3300 !important; // Rosso Enel
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      .input-group {
+        .input-group-append {
+          .btn-outline-primary {
+            color: #00843D;
+            border-color: #00843D;
+            
+            &:hover {
+              background-color: #00843D;
+              color: white;
+            }
+          }
+        }
+      }
+      
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        
+        .btn {
+          padding: 8px 20px;
+          font-weight: 500;
+          
+          &.btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            
+            &:hover {
+              background-color: darken(#6c757d, 10%);
+              border-color: darken(#6c757d, 10%);
+            }
+          }
+          
+          &.btn-primary {
+            background-color: #00843D; // Verde Enel
+            border-color: #00843D;
+            
+            &:hover {
+              background-color: darken(#00843D, 10%);
+              border-color: darken(#00843D, 10%);
+            }
+            
+            &:disabled {
+              background-color: lighten(#00843D, 20%);
+              border-color: lighten(#00843D, 20%);
+            }
+          }
+        }
+      }
+    }
+  }
+}

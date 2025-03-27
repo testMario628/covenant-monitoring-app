@@ -1,0 +1,144 @@
+.notification-list-container {
+  .card {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    .card-header {
+      padding: 15px;
+      border-radius: 8px 8px 0 0;
+      
+      .card-title {
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #00843D; // Verde Enel
+      }
+      
+      .btn-outline-primary {
+        color: #00843D;
+        border-color: #00843D;
+        
+        &:hover {
+          background-color: #00843D;
+          color: white;
+        }
+      }
+    }
+    
+    .card-body {
+      padding: 15px;
+      
+      .notification-counter {
+        .badge {
+          padding: 5px 10px;
+          font-size: 14px;
+          font-weight: 500;
+          
+          &.bg-primary {
+            background-color: #00843D !important; // Verde Enel
+          }
+        }
+      }
+      
+      .notification-list {
+        .notification-item {
+          display: flex;
+          padding: 15px;
+          border-radius: 8px;
+          margin-bottom: 15px;
+          background-color: #f9f9f9;
+          border-left: 4px solid #ccc;
+          
+          &.unread {
+            background-color: #f0f7ff;
+            font-weight: 500;
+          }
+          
+          &.notification-warning {
+            border-left-color: #FFD100; // Giallo Enel
+            
+            .notification-icon {
+              color: #FFD100;
+            }
+          }
+          
+          &.notification-alert {
+            border-left-color: #FF3300; // Rosso Enel
+            
+            .notification-icon {
+              color: #FF3300;
+            }
+          }
+          
+          &.notification-info {
+            border-left-color: #007bff;
+            
+            .notification-icon {
+              color: #007bff;
+            }
+          }
+          
+          &.notification-success {
+            border-left-color: #00843D; // Verde Enel
+            
+            .notification-icon {
+              color: #00843D;
+            }
+          }
+          
+          .notification-icon {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            
+            i {
+              font-size: 24px;
+            }
+          }
+          
+          .notification-content {
+            flex: 1;
+            
+            .notification-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 5px;
+              
+              .notification-title {
+                margin-bottom: 0;
+                font-weight: 600;
+              }
+              
+              .notification-time {
+                font-size: 12px;
+                color: #6c757d;
+              }
+            }
+            
+            .notification-body {
+              margin-bottom: 10px;
+              color: #333;
+            }
+            
+            .notification-actions {
+              display: flex;
+              justify-content: flex-end;
+              
+              .btn-link {
+                padding: 0;
+                margin-left: 15px;
+                color: #00843D; // Verde Enel
+                text-decoration: none;
+                
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

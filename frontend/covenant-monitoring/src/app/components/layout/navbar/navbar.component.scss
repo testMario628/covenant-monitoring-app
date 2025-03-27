@@ -1,0 +1,94 @@
+.navbar {
+  height: 60px;
+  padding: 0 15px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16);
+  
+  .navbar-wrapper {
+    display: flex;
+    align-items: center;
+    
+    .navbar-toggler {
+      margin-right: 15px;
+      display: none;
+      
+      @media (max-width: 991px) {
+        display: block;
+      }
+    }
+    
+    .navbar-brand {
+      color: #00843D; // Verde Enel
+      font-weight: bold;
+    }
+  }
+  
+  .form-inline {
+    .input-group {
+      width: 300px;
+      
+      .form-control {
+        border-radius: 20px 0 0 20px;
+        border-right: none;
+        
+        &:focus {
+          box-shadow: none;
+          border-color: #00843D;
+        }
+      }
+      
+      .input-group-append {
+        .btn {
+          border-radius: 0 20px 20px 0;
+          border-left: none;
+          color: #00843D;
+          border-color: #ced4da;
+          
+          &:hover {
+            background-color: #00843D;
+            color: white;
+            border-color: #00843D;
+          }
+        }
+      }
+    }
+  }
+  
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        position: relative;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        
+        i {
+          font-size: 24px;
+          margin-right: 5px;
+        }
+        
+        .notification {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background-color: #FF3300; // Rosso Enel
+          color: white;
+          font-size: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      
+      .dropdown-menu {
+        .dropdown-item {
+          &:hover {
+            background-color: rgba(0, 132, 61, 0.1); // Verde Enel con opacità
+          }
+        }
+      }
+    }
+  }
+}

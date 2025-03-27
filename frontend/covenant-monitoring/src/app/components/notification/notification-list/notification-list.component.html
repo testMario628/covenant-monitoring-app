@@ -1,0 +1,121 @@
+<div class="notification-list-container">
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title">Notifiche</h5>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-outline-primary" (click)="markAllAsRead()">
+            <i class="material-icons">done_all</i> Segna tutte come lette
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <div class="notification-counter mb-3">
+        <span class="badge bg-primary">{{ unreadCount$ | async }} non lette</span>
+      </div>
+      
+      <div class="notification-list">
+        <ng-container *ngIf="(loading$ | async) === false; else loadingTemplate">
+          <ng-container *ngIf="(notifications$ | async)?.length; else noDataTemplate">
+            <!-- Dati di esempio, in produzione verrebbero dal backend -->
+            <div class="notification-item unread" [ngClass]="getNotificationClass('WARNING')">
+              <div class="notification-icon">
+                <i class="material-icons">warning</i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <h6 class="notification-title">Covenant in stato critico</h6>
+                  <span class="notification-time">2 ore fa</span>
+                </div>
+                <div class="notification-body">
+                  Il covenant "Leverage Ratio" del contratto "Finanziamento Impianto Solare" è passato in stato ROSSO.
+                </div>
+                <div class="notification-actions">
+                  <button class="btn btn-sm btn-link" (click)="markAsRead(1)">Segna come letta</button>
+                  <button class="btn btn-sm btn-link" (click)="deleteNotification(1)">Elimina</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="notification-item" [ngClass]="getNotificationClass('INFO')">
+              <div class="notification-icon">
+                <i class="material-icons">info</i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <h6 class="notification-title">Monitoraggio in scadenza</h6>
+                  <span class="notification-time">1 giorno fa</span>
+                </div>
+                <div class="notification-body">
+                  Il covenant "Debt Service Coverage Ratio" del contratto "Finanziamento Progetto Eolico" deve essere monitorato entro 7 giorni.
+                </div>
+                <div class="notification-actions">
+                  <button class="btn btn-sm btn-link" (click)="markAsRead(2)">Segna come letta</button>
+                  <button class="btn btn-sm btn-link" (click)="deleteNotification(2)">Elimina</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="notification-item" [ngClass]="getNotificationClass('SUCCESS')">
+              <div class="notification-icon">
+                <i class="material-icons">check_circle</i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <h6 class="notification-title">Monitoraggio completato</h6>
+                  <span class="notification-time">3 giorni fa</span>
+                </div>
+                <div class="notification-body">
+                  Il monitoraggio del covenant "Interest Coverage Ratio" del contratto "Finanziamento Corporate" è stato completato con successo.
+                </div>
+                <div class="notification-actions">
+                  <button class="btn btn-sm btn-link" (click)="markAsRead(3)">Segna come letta</button>
+                  <button class="btn btn-sm btn-link" (click)="deleteNotification(3)">Elimina</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="notification-item unread" [ngClass]="getNotificationClass('ALERT')">
+              <div class="notification-icon">
+                <i class="material-icons">error</i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-header">
+                  <h6 class="notification-title">Monitoraggio scaduto</h6>
+                  <span class="notification-time">5 giorni fa</span>
+                </div>
+                <div class="notification-body">
+                  Il monitoraggio del covenant "Working Capital Ratio" del contratto "Finanziamento Impianto Solare" è scaduto. Si prega di completare il monitoraggio al più presto.
+                </div>
+                <div class="notification-actions">
+                  <button class="btn btn-sm btn-link" (click)="markAsRead(4)">Segna come letta</button>
+                  <button class="btn btn-sm btn-link" (click)="deleteNotification(4)">Elimina</button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+      
+      <!-- Template di caricamento -->
+      <ng-template #loadingTemplate>
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Caricamento...</span>
+          </div>
+          <p class="mt-2">Caricamento notifiche...</p>
+        </div>
+      </ng-template>
+      
+      <!-- Template nessun dato -->
+      <ng-template #noDataTemplate>
+        <div class="text-center py-5">
+          <i class="material-icons" style="font-size: 48px; color: #ccc;">notifications_off</i>
+          <p class="mt-2">Non ci sono notifiche da visualizzare.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,219 @@
+<div class="contract-list-container">
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title">Gestione Contratti</h5>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-outline-primary" [routerLink]="['/contracts/new']">
+            <i class="material-icons">add</i> Nuovo Contratto
+          </button>
+          <button class="btn btn-sm btn-outline-success" (click)="exportToExcel(contracts$ | async)">
+            <i class="material-icons">file_download</i> Excel
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <!-- Filtri -->
+      <div class="filter-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="m-0">Filtri</h6>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-secondary" (click)="resetFilters()">
+              <i class="material-icons">clear</i> Reset
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="applyFilters()">
+              <i class="material-icons">search</i> Applica
+            </button>
+          </div>
+        </div>
+        
+        <form [formGroup]="filterForm">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>ID Contratto</label>
+                <input type="text" class="form-control" formControlName="contractId">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Titolo</label>
+                <input type="text" class="form-control" formControlName="title">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Entità Legale</label>
+                <input type="text" class="form-control" formControlName="legalEntity">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Paese</label>
+                <select class="form-control" formControlName="country">
+                  <option value="">Tutti</option>
+                  <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Stato</label>
+                <select class="form-control" formControlName="status">
+                  <option value="">Tutti</option>
+                  <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Data Inizio (Da)</label>
+                <input type="date" class="form-control" formControlName="startDateFrom">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Data Inizio (A)</label>
+                <input type="date" class="form-control" formControlName="startDateTo">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Viste Salvate</label>
+                <div class="input-group">
+                  <select class="form-control" [value]="selectedView?.id || ''">
+                    <option value="">Seleziona Vista</option>
+                    <option *ngFor="let view of savedViews" [value]="view.id">{{view.name}}</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary" (click)="saveCurrentView()">
+                      <i class="material-icons">save</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tabella Contratti -->
+      <div class="table-responsive mt-4">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Titolo</th>
+              <th>Entità Legale</th>
+              <th>Paese</th>
+              <th>Data Inizio</th>
+              <th>Data Fine</th>
+              <th>Stato</th>
+              <th>Covenant</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="(loading$ | async) === false; else loadingTemplate">
+              <ng-container *ngIf="(contracts$ | async)?.length; else noDataTemplate">
+                <!-- Dati di esempio, in produzione verrebbero dal backend -->
+                <tr>
+                  <td>CONT-001</td>
+                  <td>Finanziamento Progetto Eolico</td>
+                  <td>Enel Green Power</td>
+                  <td>Italia</td>
+                  <td>01/01/2023</td>
+                  <td>31/12/2030</td>
+                  <td><span class="badge bg-success text-white">Attivo</span></td>
+                  <td>3</td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-info" (click)="viewContract({id: 1})">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button class="btn btn-sm btn-primary" (click)="editContract({id: 1})">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteContract(1)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CONT-002</td>
+                  <td>Finanziamento Impianto Solare</td>
+                  <td>Enel Green Power</td>
+                  <td>Spagna</td>
+                  <td>15/03/2022</td>
+                  <td>14/03/2032</td>
+                  <td><span class="badge bg-success text-white">Attivo</span></td>
+                  <td>5</td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-info" (click)="viewContract({id: 2})">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button class="btn btn-sm btn-primary" (click)="editContract({id: 2})">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteContract(2)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>CONT-003</td>
+                  <td>Finanziamento Corporate</td>
+                  <td>Enel S.p.A.</td>
+                  <td>Italia</td>
+                  <td>10/06/2021</td>
+                  <td>09/06/2026</td>
+                  <td><span class="badge bg-success text-white">Attivo</span></td>
+                  <td>4</td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-info" (click)="viewContract({id: 3})">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button class="btn btn-sm btn-primary" (click)="editContract({id: 3})">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteContract(3)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+        
+        <!-- Template di caricamento -->
+        <ng-template #loadingTemplate>
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Caricamento...</span>
+            </div>
+            <p class="mt-2">Caricamento contratti...</p>
+          </div>
+        </ng-template>
+        
+        <!-- Template nessun dato -->
+        <ng-template #noDataTemplate>
+          <div class="text-center py-5">
+            <i class="material-icons" style="font-size: 48px; color: #ccc;">description_off</i>
+            <p class="mt-2">Nessun contratto trovato. Prova a modificare i filtri o aggiungi un nuovo contratto.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

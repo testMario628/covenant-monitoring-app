@@ -1,0 +1,231 @@
+<div class="covenant-list-container">
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title">Gestione Covenant</h5>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-outline-primary" [routerLink]="['/covenants/new']">
+            <i class="material-icons">add</i> Nuovo Covenant
+          </button>
+          <button class="btn btn-sm btn-outline-success" (click)="exportToExcel(covenants$ | async)">
+            <i class="material-icons">file_download</i> Excel
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <!-- Filtri -->
+      <div class="filter-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="m-0">Filtri</h6>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-secondary" (click)="resetFilters()">
+              <i class="material-icons">clear</i> Reset
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="applyFilters()">
+              <i class="material-icons">search</i> Applica
+            </button>
+          </div>
+        </div>
+        
+        <form [formGroup]="filterForm">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>ID Covenant</label>
+                <input type="text" class="form-control" formControlName="covenantId">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" formControlName="name">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Tipo</label>
+                <select class="form-control" formControlName="type">
+                  <option value="">Tutti</option>
+                  <option *ngFor="let type of covenantTypes" [value]="type">{{type}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>ID Contratto</label>
+                <input type="text" class="form-control" formControlName="contractId">
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Stato</label>
+                <select class="form-control" formControlName="status">
+                  <option value="">Tutti</option>
+                  <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Frequenza</label>
+                <select class="form-control" formControlName="frequency">
+                  <option value="">Tutte</option>
+                  <option *ngFor="let frequency of frequencies" [value]="frequency">{{frequency}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>In scadenza entro (giorni)</label>
+                <input type="number" class="form-control" formControlName="dueInDays">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Viste Salvate</label>
+                <div class="input-group">
+                  <select class="form-control" [value]="selectedView?.id || ''">
+                    <option value="">Seleziona Vista</option>
+                    <option *ngFor="let view of savedViews" [value]="view.id">{{view.name}}</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary" (click)="saveCurrentView()">
+                      <i class="material-icons">save</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tabella Covenant -->
+      <div class="table-responsive mt-4">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th>Contratto</th>
+              <th>Threshold</th>
+              <th>Frequenza</th>
+              <th>Prossimo Monitoraggio</th>
+              <th>Stato</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="(loading$ | async) === false; else loadingTemplate">
+              <ng-container *ngIf="(covenants$ | async)?.length; else noDataTemplate">
+                <!-- Dati di esempio, in produzione verrebbero dal backend -->
+                <tr>
+                  <td>COV-001</td>
+                  <td>Debt Service Coverage Ratio</td>
+                  <td>DSCR</td>
+                  <td>CONT-001</td>
+                  <td>1.2</td>
+                  <td>Trimestrale</td>
+                  <td>15/04/2025</td>
+                  <td><span class="badge bg-warning text-white">GIALLO</span></td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-info" (click)="viewCovenant({id: 1})">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button class="btn btn-sm btn-primary" (click)="editCovenant({id: 1})">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button class="btn btn-sm btn-success" (click)="monitorCovenant({id: 1})">
+                        <i class="material-icons">assessment</i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteCovenant(1)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>COV-002</td>
+                  <td>Leverage Ratio</td>
+                  <td>LeverageRatio</td>
+                  <td>CONT-002</td>
+                  <td>4.0</td>
+                  <td>Semestrale</td>
+                  <td>10/05/2025</td>
+                  <td><span class="badge bg-danger text-white">ROSSO</span></td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-info" (click)="viewCovenant({id: 2})">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button class="btn btn-sm btn-primary" (click)="editCovenant({id: 2})">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button class="btn btn-sm btn-success" (click)="monitorCovenant({id: 2})">
+                        <i class="material-icons">assessment</i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteCovenant(2)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>COV-003</td>
+                  <td>Interest Coverage Ratio</td>
+                  <td>ICR</td>
+                  <td>CONT-003</td>
+                  <td>1.5</td>
+                  <td>Trimestrale</td>
+                  <td>20/04/2025</td>
+                  <td><span class="badge bg-success text-white">VERDE</span></td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-info" (click)="viewCovenant({id: 3})">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button class="btn btn-sm btn-primary" (click)="editCovenant({id: 3})">
+                        <i class="material-icons">edit</i>
+                      </button>
+                      <button class="btn btn-sm btn-success" (click)="monitorCovenant({id: 3})">
+                        <i class="material-icons">assessment</i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteCovenant(3)">
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+        
+        <!-- Template di caricamento -->
+        <ng-template #loadingTemplate>
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Caricamento...</span>
+            </div>
+            <p class="mt-2">Caricamento covenant...</p>
+          </div>
+        </ng-template>
+        
+        <!-- Template nessun dato -->
+        <ng-template #noDataTemplate>
+          <div class="text-center py-5">
+            <i class="material-icons" style="font-size: 48px; color: #ccc;">gavel_off</i>
+            <p class="mt-2">Nessun covenant trovato. Prova a modificare i filtri o aggiungi un nuovo covenant.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
